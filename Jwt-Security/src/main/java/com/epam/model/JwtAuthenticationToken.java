@@ -5,7 +5,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 public class JwtAuthenticationToken extends UsernamePasswordAuthenticationToken {
 
 	private static final long serialVersionUID = 1L;
-	private String token;
+	String token;
+
+	public JwtAuthenticationToken(String token) {
+		super(null, null);
+		this.token = token;
+
+	}
 
 	@Override
 	public Object getCredentials() {
@@ -15,11 +21,6 @@ public class JwtAuthenticationToken extends UsernamePasswordAuthenticationToken 
 	@Override
 	public Object getPrincipal() {
 		return null;
-	}
-
-	public JwtAuthenticationToken(String token) {
-		super(null, null);
-		this.setToken(token);
 	}
 
 	public String getToken() {

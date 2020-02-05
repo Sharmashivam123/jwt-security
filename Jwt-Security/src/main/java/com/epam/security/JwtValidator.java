@@ -1,20 +1,23 @@
 package com.epam.security;
 
+import org.springframework.stereotype.Component;
+
 import com.epam.model.JwtUser;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
+@Component
 public class JwtValidator {
 
-	JwtUser jwtUser = new JwtUser();
-
-	public JwtUser validate(String token) {
+	public JwtUser validate(String jwtToken) {
+		JwtUser jwtUser = new JwtUser();
 		try {
-			Claims claim = Jwts.parser().setSigningKey("youtube").parseClaimsJws(token).getBody();
-			jwtUser.setUsername(claim.getSubject());
-			jwtUser.setId(Long.parseLong((String) claim.get("userId")));
-			jwtUser.setRole((String) claim.get("role"));
+			Claims body = Jwts.parser().setSigningKey("youtube").parseClaimsJwt(jwtToken).getBody();
+			jwtUser.setUsername(body.getSubject());
+			jwtUser.setId(Long.parseLong((String) body.get("userId")));
+			jwtUser.setRole((String) body.get("role"));
+
 		} catch (Exception e) {
 
 		}

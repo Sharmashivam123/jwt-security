@@ -17,10 +17,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.epam.security.JwtAuthenticationEntryPoint;
 import com.epam.security.JwtAuthenticationFilter;
 import com.epam.security.JwtAuthenticationProvider;
+import com.epam.security.JwtSuccessHandler;
 
-@Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Configuration
+@EnableGlobalMethodSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -32,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public JwtAuthenticationFilter authenticationFilter() {
 		JwtAuthenticationFilter filter = new JwtAuthenticationFilter();
 		filter.setAuthenticationManager(authenticationManager());
+		filter.setSuccessHandler(new JwtSuccessHandler());
 		return filter;
 	}
 
