@@ -18,10 +18,8 @@ import com.epam.model.JwtUserDetails;
 @Component
 public class JwtAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
-	@Override
-	public boolean supports(Class<?> authentication) {
-		return JwtAuthenticationToken.class.isAssignableFrom(authentication);
-	}
+	@Autowired
+	private JwtValidator jwtValidator;
 
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails userDetails,
@@ -29,19 +27,21 @@ public class JwtAuthenticationProvider extends AbstractUserDetailsAuthentication
 
 	}
 
-	@Autowired
-	JwtValidator validator;
-
 	@Override
 	protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException {
-		JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
-		String jwtToken = token.getToken();
-		JwtUser jwtUser = validator.validate(jwtToken);
+		JwtAuthenticationToken jwtToken = (JwtAuthenticationToken) authentication;
+		String token = jwtToken.getToken();
+		JwtUser jwtUser = jwtValidator.validate(token);
 		if (jwtUser == null)
-			throw new RuntimeException("jwtToken is incorrect");
-		List<GrantedAuthority> list = AuthorityUtils.commaSeparatedStringToAuthorityList(jwtUser.getRole());
-		return new JwtUserDetails(jwtUser.getUsername(), jwtUser.getId(), list, jwtToken);
+			throw new RuntimeException("User doen't exists");
+		List<GrantedAuthority> roleList = AuthorityUtils.commaSeparatedStringToAuthorityList(jwtUser.getRole());
+		return new JwtUserDetails(jwtUser.getUsername(), jwtUser.getId(), roleList, token);
+	}
+
+	@Override
+	public boolean supports(Class<?> authentication) {
+		return (JwtAuthenticationToken.class.isAssignableFrom(authentication));
 	}
 
 }

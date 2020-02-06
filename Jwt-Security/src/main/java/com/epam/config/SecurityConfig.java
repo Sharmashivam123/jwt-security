@@ -19,9 +19,9 @@ import com.epam.security.JwtAuthenticationFilter;
 import com.epam.security.JwtAuthenticationProvider;
 import com.epam.security.JwtSuccessHandler;
 
-@EnableWebSecurity
 @Configuration
-@EnableGlobalMethodSecurity
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public JwtAuthenticationFilter authenticationFilter() {
 		JwtAuthenticationFilter filter = new JwtAuthenticationFilter();
 		filter.setAuthenticationManager(authenticationManager());
-		filter.setSuccessHandler(new JwtSuccessHandler());
+		filter.setAuthenticationSuccessHandler(new JwtSuccessHandler());
 		return filter;
 	}
 

@@ -9,12 +9,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class JwtUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
-	String username;
-	long id;
-	List<GrantedAuthority> list;
-	String token;
+	private String username;
+	private Long id;
+	private List<GrantedAuthority> role;
+	private String token;
 
-	public long getId() {
+	public JwtUserDetails(String username, Long id, List<GrantedAuthority> role, String token) {
+		this.username = username;
+		this.id = id;
+		this.role = role;
+		this.token = token;
+	}
+
+	public Long getId() {
 		return id;
 	}
 
@@ -22,21 +29,16 @@ public class JwtUserDetails implements UserDetails {
 		return token;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public JwtUserDetails(String username, long id, List<GrantedAuthority> list, String jwtToken) {
-		this.username = username;
-		this.id = id;
-		this.list = list;
-		token = jwtToken;
-	}
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 
-		return list;
+		return role;
+	}
+
+	@Override
+	public String getPassword() {
+
+		return null;
 	}
 
 	@Override
@@ -59,18 +61,14 @@ public class JwtUserDetails implements UserDetails {
 
 	@Override
 	public boolean isCredentialsNonExpired() {
+
 		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return true;
-	}
 
-	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return null;
+		return true;
 	}
 
 }
